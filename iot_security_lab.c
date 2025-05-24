@@ -1,5 +1,5 @@
-// Bibliotecas necessárias
-#include <string.h>                 // Para funções de string como strlen()
+#include <string.h>
+#include <time.h>               // Para funções de string como strlen()
 #include "pico/stdlib.h"            // Biblioteca padrão do Pico (GPIO, tempo, etc.)
 #include "pico/cyw43_arch.h"        // Driver WiFi para Pico W
 #include "include/wifi_conn.h"      // Funções personalizadas de conexão WiFi
@@ -7,34 +7,26 @@
 #include "include/xor_cipher.h"     // Funções de cifra XOR
 
 int main() {
-    // Inicializa todas as interfaces de I/O padrão (USB serial, etc.)
     stdio_init_all();
-    
-    // Conecta à rede WiFi
-    // Parâmetros: Nome da rede (SSID) e senha
-    connect_to_wifi("SSID da rede", "Senha da rede");
+    connect_to_wifi("Xiaomi", "Testinho");
+    mqtt_setup("bitdog1", "192.168.245.228", "aluno", "aluno123");
 
-    // Configura o cliente MQTT
-    // Parâmetros: ID do cliente, IP do broker, usuário, senha
-    mqtt_setup("bitdog1", "IP do broker", "aluno", "senha123");
-
-    // Mensagem original a ser enviada
     const char *mensagem = "26.5";
-    // Buffer para mensagem criptografada (16 bytes)
     uint8_t criptografada[16];
-    // Criptografa a mensagem usando XOR com chave 42
     xor_encrypt((uint8_t *)mensagem, criptografada, strlen(mensagem), 42);
 
-    // Loop principal do programa
+    //mqtt_comm_subscribe("escola/sala1/temperatura", 0);
+
     while (true) {
-        // Publica a mensagem original (não criptografada)
-        mqtt_comm_publish("escola/sala1/temperatura", mensagem, strlen(mensagem));
         
+        // Publica a mensagem original (não criptografada)
+        //mqtt_comm_publish("escola/sala1/temperatura", mensagem, strlen(mensagem));
+
         // Alternativa: Publica a mensagem criptografada (atualmente comentada)
-        // mqtt_comm_publish("escola/sala1/temperatura", criptografada, strlen(mensagem));
+        mqtt_comm_publish("escola/sala1/temperatura", criptografada, strlen(mensagem));
         
         // Aguarda 5 segundos antes da próxima publicação
-        sleep_ms(5000);
+        sleep_ms(5000);  
     }
     return 0;
 }
