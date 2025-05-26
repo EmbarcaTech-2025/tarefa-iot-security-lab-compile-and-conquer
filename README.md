@@ -85,5 +85,45 @@ The project workflow is structured as follows:
 
 ---
 
+## 📊 Discussion: Scalability and Application in a School Network
+
+### 🔍 Which techniques are scalable?
+
+Several techniques used in this project can be easily scaled for larger deployments:
+
+- **Wi-Fi Initialization:**  
+  Multiple BitDogLab devices can connect to the same Wi-Fi network, as long as the access point supports the required number of concurrent connections.
+
+- **MQTT Client with Authentication:**  
+  MQTT is natively scalable and can efficiently handle dozens or hundreds of clients publishing and subscribing to topics. Broker-side authentication and ACL (Access Control Lists) further enhance security and management.
+
+- **Publishing and Subscribing with Hierarchical Topics:**  
+  Organizing topics hierarchically (e.g., `school/class1/device01/temp`) allows for efficient grouping, filtering, and access management of device data.
+
+- **Replacing XOR with AES Encryption:**  
+  AES is a widely adopted and secure encryption standard suitable for embedded systems. It scales well because the same encryption scheme can be applied across all devices while maintaining strong security.
+
+- **Message Authentication with HMAC:**  
+  HMAC ensures the integrity and authenticity of messages. It’s a lightweight and efficient technique that can be uniformly applied across multiple devices.
+
+---
+
+### 🔍 How to apply them with multiple BitDogLab devices in a school network?
+
+To safely and effectively deploy multiple BitDogLab devices in a school network:
+
+- **Configure the Mosquitto broker with authentication (username/password) and ACLs**, defining specific permissions for each device or group of devices (e.g., one ACL per classroom).
+
+- **Use hierarchical MQTT topics** to organize messages by room, device, or activity. This makes it easier to monitor, manage, and filter data.
+
+- **Deploy AES encryption** either with a shared key per classroom or a unique key per device, ensuring message confidentiality even if the MQTT traffic is intercepted.
+
+- **Add HMAC to published messages** to verify their authenticity and detect unauthorized alterations. The HMAC key can follow the same organization as the AES keys (per room or per device).
+
+- **Optionally, enable MQTT over TLS** to encrypt the entire communication channel, providing an additional layer of protection against eavesdropping.
+
+- **Centralize status and debug logs via MQTT topics**, where devices can publish their connection status or error messages, making it easier to monitor the network's health and diagnose issues.
+
+
 ## 📜 Licença
 GNU GPL-3.0.
