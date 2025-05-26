@@ -2,7 +2,7 @@
 
 # Task: IoT Security Lab - EmbarcaTech 2025
 
-Authors: Luana Menezes and Vinicius
+Authors: Luana Menezes and Vinicius Caffeu
 
 Course: Technological Residency in Embedded Systems
 
