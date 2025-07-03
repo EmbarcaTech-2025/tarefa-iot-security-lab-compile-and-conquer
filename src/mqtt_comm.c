@@ -4,6 +4,11 @@
 #include "lwipopts.h"             // Configurações customizadas do lwIP
 #include <string.h>               // Para memcpy, memset, etc.
 #include "include/xor_cipher.h"     // Funções de cifra XOR
+#include <stdint.h>
+
+
+static uint32_t ultima_timestamp_recebida = 0; //para proteção de replay
+
 
 /* Variável global estática para armazenar a instância do cliente MQTT
  * 'static' limita o escopo deste arquivo */
@@ -117,8 +122,29 @@ static void mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t f
     // Copia os dados recebidos e adiciona terminador nulo
     xor_encrypt(data, message, len, 42);
     message[len] = '\0';
-    printf("Mensagem recebida: %s\n", message);
+    //printf("Mensagem recebida: %s\n", message);
     
+// Variáveis para parse
+    uint32_t nova_timestamp;
+    float valor;
+    uint32_t ultima_timestamp_recebida = 0; // Usando uint32_t para maior clareza
+
+    // Parse da mensagem JSON recebida
+    if (sscanf(message, "{\"valor\":%f,\"ts\":%lu}", &valor, &nova_timestamp) != 2) {
+        printf("Erro no parse da mensagem!\n");
+        free(message);
+        return;
+    }
+
+    // Verifica se a mensagem é nova (proteção contra replay)
+    if (nova_timestamp > ultima_timestamp_recebida) {
+        ultima_timestamp_recebida = nova_timestamp;
+        printf("Nova leitura: %.2f (ts: %lu)\n", valor, nova_timestamp);
+        // Aqui você pode adicionar processamento extra
+    } else {
+        printf("Replay detectado (ts: %lu <= %lu)\n", nova_timestamp, ultima_timestamp_recebida);
+    }
+
     // Libera a memória alocada
     free(message);
 }

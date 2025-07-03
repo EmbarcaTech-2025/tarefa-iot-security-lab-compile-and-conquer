@@ -9,25 +9,32 @@
 int main() {
     stdio_init_all();
     connect_to_wifi("Xiaomi", "Testinho");
-    mqtt_setup("bitdog1", "192.168.245.228", "aluno", "aluno123");
+    mqtt_setup("bitdog2", "192.168.121.228", "aluno", "aluno123");
 
-    const char *mensagem = "26.5";
-    uint8_t criptografada[16];
-    xor_encrypt((uint8_t *)mensagem, criptografada, strlen(mensagem), 42);
+char buffer[128];
+char criptografada[128];
+float valor = 26.5;
 
-    //mqtt_comm_subscribe("escola/sala1/temperatura", 0);
+mqtt_comm_subscribe("escola/sala1/temperatura", 0);
+
 
     while (true) {
-        
-        // Publica a mensagem original (não criptografada)
-        //mqtt_comm_publish("escola/sala1/temperatura", mensagem, strlen(mensagem));
+        //uint32_t timestamp = time(NULL);
 
-        // Alternativa: Publica a mensagem criptografada (atualmente comentada)
-        mqtt_comm_publish("escola/sala1/temperatura", criptografada, strlen(mensagem));
-        
-        // Aguarda 5 segundos antes da próxima publicação
-        sleep_ms(5000);  
+        // Monta JSON com valor e timestamp
+        //sprintf(buffer, "{\"valor\":%.2f,\"ts\":%lu}", valor, timestamp);
+        // Criptografa a mensagem
+        //xor_encrypt((uint8_t*)buffer, (uint8_t*)criptografada, strlen(buffer), 42);
+
+        // Publica a mensagem criptografada
+        //mqtt_comm_publish("escola/sala1/temperatura", (uint8_t*)criptografada, strlen(buffer));
+
+        //printf("Mensagem publicada: %s\n", buffer);
+
+        // Aguarda 5 segundos
+        sleep_ms(5000);
     }
+
     return 0;
 }
 

@@ -83,6 +83,15 @@ The project workflow is structured as follows:
 ![Wireshark Without Encryption](assets/wireshark_sem_cryptografia.png)  
 *Wireshark network capture showing unencrypted MQTT payloads, highlighting the importance of encryption for security.*
 
+**Serial Monitor with Timestamps:**  
+![Serial Monitor Timestamps](assets/timestamp.png)  
+*Serial monitor output showing temperature readings with precise timestamps.*
+
+**Error Handling - Bad Message Format:**  
+![Bad Format Error](assets/bad_format.png)  
+*Serial monitor output showing error handling when receiving malformed or corrupted messages, demonstrating robust error detection and recovery.*
+
+
 ---
 
 ## 📊 Discussion: Scalability and Application in a School Network
